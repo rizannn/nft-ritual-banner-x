@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <g transform="translate(100,100) rotate(45) translate(-50,-50)">
+    <!-- Endless knot / Celtic-style Ritual logo -->
+    <path d="M25,0 L50,0 L50,25 L75,25 L75,0 L100,0 L100,25 L75,25 L75,50 L100,50 L100,75 L75,75 L75,50 L50,50 L50,75 L25,75 L25,50 L50,50 L50,25 L25,25 Z" fill="white" stroke="white" stroke-width="0"/>
+    <!-- Cross bars -->
+    <path d="M0,25 L25,25 L25,50 L0,50 Z" fill="white"/>
+    <path d="M75,25 L100,25 L100,50 L75,50 Z" fill="white"/>
+    <path d="M25,0 L50,0 L50,25 L25,25 Z" fill="white"/>
+    <path d="M50,75 L75,75 L75,100 L50,100 Z" fill="white"/>
+    <!-- Outer corners -->
+    <rect x="0" y="0" width="15" height="15" fill="white"/>
+    <rect x="85" y="0" width="15" height="15" fill="white"/>
+    <rect x="0" y="85" width="15" height="15" fill="white"/>
+    <rect x="85" y="85" width="15" height="15" fill="white"/>
+  </g>
+</svg>

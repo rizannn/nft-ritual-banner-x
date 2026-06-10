@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ritual Banner NFT — Mint Your X Banner on Ritual Chain</title>
+  <meta name="description" content="Create and mint personalized X (Twitter) banner NFTs on Ritual Chain. Connect your wallet, add your name, upload your photo, and mint." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <!-- ═══ Ambient Background ═══ -->
+  <div class="bg-ambient">
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-grid"></div>
+  </div>
+
+  <!-- ═══ Header / Navbar ═══ -->
+  <header id="app-header" class="header">
+    <div class="header__logo">
+      <img src="/ritual-logo.png" alt="Ritual" class="header__logo-img" />
+      <span class="header__logo-text">Ritual Banner <span class="header__logo-accent">NFT</span></span>
+    </div>
+
+    <div class="header__credits">
+      Built by <a href="https://x.com/rizann67" target="_blank" rel="noopener">Rizan</a> &amp; <a href="https://x.com/0ximbalance" target="_blank" rel="noopener">Piktawr</a> | Dedicated for <a href="https://x.com/ritualnet" target="_blank" rel="noopener">Ritual</a>
+    </div>
+
+    <div class="header__actions">
+      <div id="network-badge" class="network-badge network-badge--hidden">
+        <span class="network-badge__dot"></span>
+        <span class="network-badge__label">Ritual Chain</span>
+      </div>
+      <button id="btn-connect" class="btn btn--primary btn--glow">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-7a4 4 0 00-4 4v0a4 4 0 004 4h7"/><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="18" cy="13" r="1.5" fill="currentColor"/></svg>
+        <span>Connect Wallet</span>
+      </button>
+      <button id="btn-disconnect" class="btn btn--danger btn--hidden" title="Disconnect wallet">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ Main Content ═══ -->
+  <main id="app-main" class="main">
+
+    <!-- Hero Section -->
+    <section id="section-hero" class="hero">
+      <div class="hero__badge">
+        <span class="hero__badge-dot"></span>
+        Powered by Ritual Chain
+      </div>
+      <h1 class="hero__title">
+        Mint Your <span class="gradient-text">X Banner</span> as an NFT
+      </h1>
+      <p class="hero__subtitle">
+        Create a personalized banner, add your photo and name, then mint it on-chain. 
+        Own your identity forever on Ritual Chain.
+      </p>
+      <button id="btn-get-started" class="btn btn--large btn--primary btn--glow">
+        Get Started
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </section>
+
+    <!-- Step Progress -->
+    <div id="step-progress" class="step-progress step-progress--hidden">
+      <div class="step-progress__track">
+        <div class="step-progress__step" data-step="1">
+          <div class="step-progress__circle">1</div>
+          <span class="step-progress__label">Connect</span>
+        </div>
+        <div class="step-progress__line"><div class="step-progress__line-fill"></div></div>
+        <div class="step-progress__step" data-step="2">
+          <div class="step-progress__circle">2</div>
+          <span class="step-progress__label">Details</span>
+        </div>
+        <div class="step-progress__line"><div class="step-progress__line-fill"></div></div>
+        <div class="step-progress__step" data-step="3">
+          <div class="step-progress__circle">3</div>
+          <span class="step-progress__label">Photo</span>
+        </div>
+        <div class="step-progress__line"><div class="step-progress__line-fill"></div></div>
+        <div class="step-progress__step" data-step="4">
+          <div class="step-progress__circle">4</div>
+          <span class="step-progress__label">Preview</span>
+        </div>
+        <div class="step-progress__line"><div class="step-progress__line-fill"></div></div>
+        <div class="step-progress__step" data-step="5">
+          <div class="step-progress__circle">5</div>
+          <span class="step-progress__label">Mint</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 1: Connect Wallet -->
+    <section id="step-1" class="step-section step-section--hidden">
+      <div class="card card--glass">
+        <div class="card__icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00e68a" stroke-width="1.5"><path d="M20 7h-7a4 4 0 00-4 4v0a4 4 0 004 4h7"/><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="18" cy="13" r="1.5" fill="#00e68a"/></svg>
+        </div>
+        <h2 class="card__title">Connect Your Wallet</h2>
+        <p class="card__desc">Connect your MetaMask wallet to Ritual Chain to start creating your banner.</p>
+        <div id="wallet-info" class="wallet-info wallet-info--hidden">
+          <div class="wallet-info__address">
+            <span class="wallet-info__dot"></span>
+            <span id="wallet-address-display">0x...0000</span>
+          </div>
+          <span id="wallet-balance" class="wallet-info__balance">0 RITUAL</span>
+        </div>
+        <button id="btn-connect-step" class="btn btn--primary btn--glow btn--full">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-7a4 4 0 00-4 4v0a4 4 0 004 4h7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+          Connect MetaMask
+        </button>
+        <button id="btn-step1-next" class="btn btn--secondary btn--full btn--hidden">
+          Continue
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Step 2: Enter Name -->
+    <section id="step-2" class="step-section step-section--hidden">
+      <div class="card card--glass">
+        <div class="card__icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00e68a" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <h2 class="card__title">Enter Your Details</h2>
+        <p class="card__desc">This name will be saved in your NFT metadata.</p>
+        <div class="form-group">
+          <label for="input-name" class="form-label">Display Name</label>
+          <input id="input-name" type="text" class="form-input" placeholder="e.g. Rizan" maxlength="30" autocomplete="off" />
+          <span id="name-counter" class="form-hint">0 / 30</span>
+        </div>
+        <div class="card__actions">
+          <button id="btn-step2-back" class="btn btn--ghost">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button id="btn-step2-next" class="btn btn--primary btn--glow" disabled>
+            Continue
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 3: Upload & Crop Photo -->
+    <section id="step-3" class="step-section step-section--hidden">
+      <div class="card card--glass card--wide">
+        <div class="card__icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00e68a" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        </div>
+        <h2 class="card__title">Upload & Crop Your Photo</h2>
+        <p class="card__desc">Your photo will be placed on the banner template. Upload and crop it to fit.</p>
+
+        <!-- Upload area -->
+        <div id="upload-area" class="upload-area">
+          <div class="upload-area__content">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p class="upload-area__text">Drag & drop or <span class="upload-area__link">browse</span></p>
+            <p class="upload-area__hint">PNG, JPG, or WebP — Max 10MB</p>
+          </div>
+          <input id="file-input" type="file" accept="image/png,image/jpeg,image/webp" class="upload-area__input" />
+        </div>
+
+        <!-- Cropper -->
+        <div id="cropper-container" class="cropper-container cropper-container--hidden">
+          <div class="cropper-wrapper">
+            <img id="cropper-image" src="" alt="Crop preview" />
+          </div>
+          <div class="cropper-actions">
+            <button id="btn-crop-rotate" class="btn btn--ghost btn--sm" title="Rotate 90°">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              Rotate
+            </button>
+            <button id="btn-crop-reset" class="btn btn--ghost btn--sm">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              Reset
+            </button>
+            <button id="btn-crop-confirm" class="btn btn--primary btn--sm">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Confirm Crop
+            </button>
+          </div>
+        </div>
+
+        <!-- Cropped preview -->
+        <div id="cropped-preview" class="cropped-preview cropped-preview--hidden">
+          <img id="cropped-image" src="" alt="Cropped photo" />
+          <div style="display: flex; gap: 10px; justify-content: center;">
+            <button id="btn-edit-crop" class="btn btn--ghost btn--sm">Re-crop</button>
+            <button id="btn-recrop" class="btn btn--ghost btn--sm">Change Photo</button>
+          </div>
+        </div>
+
+        <div class="card__actions">
+          <button id="btn-step3-back" class="btn btn--ghost">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button id="btn-step3-next" class="btn btn--primary btn--glow" disabled>
+            Continue
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 4: Preview Banner -->
+    <section id="step-4" class="step-section step-section--hidden">
+      <div class="card card--glass card--wide">
+        <div class="card__icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00e68a" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h2 class="card__title">Preview Your Banner</h2>
+        <p class="card__desc">Here's how your banner NFT will look. Make sure everything is perfect.</p>
+
+        <div id="banner-preview" class="banner-preview">
+          <canvas id="banner-canvas" width="1500" height="500"></canvas>
+        </div>
+
+        <div class="template-picker">
+          <p class="template-picker__title">Select Banner Theme</p>
+          <div class="template-picker__options">
+            <button class="theme-btn theme-btn--active" data-template="/template-green.png" style="background-color: #00e68a;" title="Green"></button>
+            <button class="theme-btn" data-template="/template-pink.png" style="background-color: #ff3399;" title="Pink"></button>
+            <button class="theme-btn" data-template="/template-purple.png" style="background-color: #9933ff;" title="Purple"></button>
+            <button class="theme-btn" data-template="/template-soft-pink.png" style="background-color: #ff99cc;" title="Soft Pink"></button>
+            <button class="theme-btn" data-template="/template-gray.png" style="background-color: #808080;" title="Gray"></button>
+          </div>
+        </div>
+
+        <div class="card__actions">
+          <button id="btn-step4-back" class="btn btn--ghost">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button id="btn-step4-next" class="btn btn--primary btn--glow">
+            Looks Good — Continue to Mint
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 5: Mint -->
+    <section id="step-5" class="step-section step-section--hidden">
+      <div class="card card--glass">
+        <div class="card__icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00e68a" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h2 class="card__title">Mint Your Banner NFT</h2>
+        <p class="card__desc">Your banner will be minted as an ERC-721 NFT on Ritual Chain.</p>
+
+        <div id="mint-summary" class="mint-summary">
+          <div class="mint-summary__row">
+            <span class="mint-summary__label">Name</span>
+            <span id="mint-name" class="mint-summary__value">—</span>
+          </div>
+          <div class="mint-summary__row">
+            <span class="mint-summary__label">Network</span>
+            <span class="mint-summary__value">Ritual Chain</span>
+          </div>
+          <div class="mint-summary__row">
+            <span class="mint-summary__label">Type</span>
+            <span class="mint-summary__value">ERC-721</span>
+          </div>
+          <div class="mint-summary__row">
+            <span class="mint-summary__label">Cost</span>
+            <span class="mint-summary__value">0.00067 RITUAL + Gas</span>
+          </div>
+        </div>
+
+        <!-- Mint States -->
+        <div id="mint-idle" class="mint-state">
+          <button id="btn-mint" class="btn btn--large btn--primary btn--glow btn--full btn--mint">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            Mint NFT
+          </button>
+          <button id="btn-download-banner" class="btn btn--outline btn--full" style="margin-top: 12px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Image
+          </button>
+        </div>
+
+        <div id="mint-loading" class="mint-state mint-state--hidden">
+          <div class="mint-loader">
+            <div class="mint-loader__spinner"></div>
+            <p class="mint-loader__text">Confirming transaction...</p>
+            <p id="mint-status-text" class="mint-loader__sub">Waiting for wallet approval</p>
+          </div>
+        </div>
+
+        <div id="mint-success" class="mint-state mint-state--hidden">
+          <div class="mint-success">
+            <div class="mint-success__icon">
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#00e68a" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <h3 class="mint-success__title">Successfully Minted! 🎉</h3>
+            <p class="mint-success__desc">Your banner NFT is now on Ritual Chain.</p>
+            <a id="tx-link" href="#" target="_blank" rel="noopener" class="btn btn--primary btn--full">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              View on Ritual Explorer
+            </a>
+            <button id="btn-download-success" class="btn btn--outline btn--full" style="margin-top: 12px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Image
+            </button>
+          </div>
+        </div>
+
+        <div id="mint-error" class="mint-state mint-state--hidden">
+          <div class="mint-error">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            <p id="mint-error-text" class="mint-error__text">Something went wrong</p>
+            <button id="btn-retry" class="btn btn--ghost">Try Again</button>
+          </div>
+        </div>
+
+        <div class="card__actions">
+          <button id="btn-step5-back" class="btn btn--ghost">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══ Footer ═══ -->
+  <footer class="footer">
+    <p>Built on <a href="https://ritualfoundation.org" target="_blank" rel="noopener">Ritual Chain</a> · Chain ID 1979</p>
+  </footer>
+
+  <!-- ═══ Toast container ═══ -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+  <script type="module" src="/main.js"></script>
+</body>
+</html>

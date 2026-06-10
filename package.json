@@ -1,0 +1,19 @@
+{
+  "name": "nft-ritual-banner-x",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "NFT Banner Generator for X — Powered by Ritual Chain",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.3.0"
+  },
+  "dependencies": {
+    "cropperjs": "^1.6.2",
+    "ethers": "^6.16.0"
+  }
+}
