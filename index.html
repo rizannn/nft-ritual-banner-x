@@ -27,7 +27,7 @@
     </div>
 
     <div class="header__credits">
-      Built by <a href="https://x.com/rizann67" target="_blank" rel="noopener">Rizan</a> &amp; <a href="https://x.com/0ximbalance" target="_blank" rel="noopener">Piktawr</a> | Dedicated for <a href="https://x.com/ritualnet" target="_blank" rel="noopener">Ritual</a>
+      Built by <a href="https://x.com/rizann67" target="_blank" rel="noopener">Rizan</a>, <a href="https://x.com/0ximbalance" target="_blank" rel="noopener">Piktawr</a> &amp; <a href="https://x.com/Nice_guyyy1" target="_blank" rel="noopener">Asceno</a> | Dedicated for <a href="https://x.com/ritualnet" target="_blank" rel="noopener">Ritual</a>
     </div>
 
     <div class="header__actions">
@@ -82,16 +82,21 @@
         <div class="step-progress__line"><div class="step-progress__line-fill"></div></div>
         <div class="step-progress__step" data-step="3">
           <div class="step-progress__circle">3</div>
-          <span class="step-progress__label">Photo</span>
+          <span class="step-progress__label">Template</span>
         </div>
         <div class="step-progress__line"><div class="step-progress__line-fill"></div></div>
         <div class="step-progress__step" data-step="4">
           <div class="step-progress__circle">4</div>
-          <span class="step-progress__label">Preview</span>
+          <span class="step-progress__label">Crop</span>
         </div>
         <div class="step-progress__line"><div class="step-progress__line-fill"></div></div>
         <div class="step-progress__step" data-step="5">
           <div class="step-progress__circle">5</div>
+          <span class="step-progress__label">Preview</span>
+        </div>
+        <div class="step-progress__line"><div class="step-progress__line-fill"></div></div>
+        <div class="step-progress__step" data-step="6">
+          <div class="step-progress__circle">6</div>
           <span class="step-progress__label">Mint</span>
         </div>
       </div>
@@ -149,20 +154,64 @@
       </div>
     </section>
 
-    <!-- Step 3: Upload & Crop Photo -->
+    <!-- Step 3: Artist / Template Selector -->
     <section id="step-3" class="step-section step-section--hidden">
+      <div class="card card--glass card--wide">
+        <div class="card__icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00e68a" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <h2 class="card__title">Choose Your Banner Style</h2>
+        <p class="card__desc">Pick a banner artist. You'll choose the exact color in the next steps.</p>
+
+        <div class="artist-cards">
+          <div class="artist-card artist-card--active" data-artist="piktawr">
+            <img src="/template-green.png" alt="Piktawr Banner" class="artist-card__img" />
+            <div class="artist-card__info">
+              <span class="artist-card__name">Piktawr</span>
+              <span class="artist-card__desc">5 color variants · Photo on the right</span>
+            </div>
+          </div>
+          <div class="artist-card" data-artist="asceno">
+            <img src="/ASCENOBANNERCOLLAB1.png" alt="Asceno Banner" class="artist-card__img" />
+            <div class="artist-card__info">
+              <span class="artist-card__name">Asceno</span>
+              <span class="artist-card__desc">4 color variants · Photo in the center</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="template-guide" class="template-guide">
+          <span class="template-guide__icon">💡</span>
+          <span id="template-guide-text">Crop into your <strong>face/eyes</strong> — your photo will appear on the <strong>right side</strong> of the banner.</span>
+        </div>
+
+        <div class="card__actions">
+          <button id="btn-step3-back" class="btn btn--ghost">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button id="btn-step3-next" class="btn btn--primary btn--glow">
+            Continue
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 4: Upload & Crop Photo -->
+    <section id="step-4" class="step-section step-section--hidden">
       <div class="card card--glass card--wide">
         <div class="card__icon">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00e68a" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
         </div>
-        <h2 class="card__title">Upload & Crop Your Photo</h2>
-        <p class="card__desc">Your photo will be placed on the banner template. Upload and crop it to fit.</p>
+        <h2 class="card__title">Upload &amp; Crop Your Photo</h2>
+        <p id="crop-guide-text" class="card__desc">Crop into your face/eyes — your photo will appear on the right side of the banner.</p>
 
         <!-- Upload area -->
         <div id="upload-area" class="upload-area">
           <div class="upload-area__content">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            <p class="upload-area__text">Drag & drop or <span class="upload-area__link">browse</span></p>
+            <p class="upload-area__text">Drag &amp; drop or <span class="upload-area__link">browse</span></p>
             <p class="upload-area__hint">PNG, JPG, or WebP — Max 10MB</p>
           </div>
           <input id="file-input" type="file" accept="image/png,image/jpeg,image/webp" class="upload-area__input" />
@@ -199,11 +248,11 @@
         </div>
 
         <div class="card__actions">
-          <button id="btn-step3-back" class="btn btn--ghost">
+          <button id="btn-step4-back" class="btn btn--ghost">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Back
           </button>
-          <button id="btn-step3-next" class="btn btn--primary btn--glow" disabled>
+          <button id="btn-step4-next" class="btn btn--primary btn--glow" disabled>
             Continue
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
@@ -211,36 +260,31 @@
       </div>
     </section>
 
-    <!-- Step 4: Preview Banner -->
-    <section id="step-4" class="step-section step-section--hidden">
+    <!-- Step 5: Color & Preview -->
+    <section id="step-5" class="step-section step-section--hidden">
       <div class="card card--glass card--wide">
         <div class="card__icon">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00e68a" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         </div>
         <h2 class="card__title">Preview Your Banner</h2>
-        <p class="card__desc">Here's how your banner NFT will look. Make sure everything is perfect.</p>
+        <p class="card__desc">Pick a color and make sure everything looks perfect.</p>
 
         <div id="banner-preview" class="banner-preview">
           <canvas id="banner-canvas" width="1500" height="500"></canvas>
         </div>
 
+        <!-- Color picker — dynamically populated by JS -->
         <div class="template-picker">
-          <p class="template-picker__title">Select Banner Theme</p>
-          <div class="template-picker__options">
-            <button class="theme-btn theme-btn--active" data-template="/template-green.png" style="background-color: #00e68a;" title="Green"></button>
-            <button class="theme-btn" data-template="/template-pink.png" style="background-color: #ff3399;" title="Pink"></button>
-            <button class="theme-btn" data-template="/template-purple.png" style="background-color: #9933ff;" title="Purple"></button>
-            <button class="theme-btn" data-template="/template-soft-pink.png" style="background-color: #ff99cc;" title="Soft Pink"></button>
-            <button class="theme-btn" data-template="/template-gray.png" style="background-color: #808080;" title="Gray"></button>
-          </div>
+          <p class="template-picker__title">Select Color Variant</p>
+          <div id="color-picker-options" class="template-picker__options"></div>
         </div>
 
         <div class="card__actions">
-          <button id="btn-step4-back" class="btn btn--ghost">
+          <button id="btn-step5-back" class="btn btn--ghost">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Back
           </button>
-          <button id="btn-step4-next" class="btn btn--primary btn--glow">
+          <button id="btn-step5-next" class="btn btn--primary btn--glow">
             Looks Good — Continue to Mint
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
@@ -248,8 +292,8 @@
       </div>
     </section>
 
-    <!-- Step 5: Mint -->
-    <section id="step-5" class="step-section step-section--hidden">
+    <!-- Step 6: Mint -->
+    <section id="step-6" class="step-section step-section--hidden">
       <div class="card card--glass">
         <div class="card__icon">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00e68a" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
@@ -261,6 +305,10 @@
           <div class="mint-summary__row">
             <span class="mint-summary__label">Name</span>
             <span id="mint-name" class="mint-summary__value">—</span>
+          </div>
+          <div class="mint-summary__row">
+            <span class="mint-summary__label">Template</span>
+            <span id="mint-template" class="mint-summary__value">—</span>
           </div>
           <div class="mint-summary__row">
             <span class="mint-summary__label">Network</span>
@@ -323,7 +371,7 @@
         </div>
 
         <div class="card__actions">
-          <button id="btn-step5-back" class="btn btn--ghost">
+          <button id="btn-step6-back" class="btn btn--ghost">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Back
           </button>

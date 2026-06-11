@@ -22,12 +22,29 @@ const CONFIG = {
   templateUrl: '/template-green.png',
 };
 
+// ── Template Registry ──
+// Each entry: { url, label, artist, holeX, holeY, holeW, holeH }
+const TEMPLATES = [
+  // Piktawr series (hole on right side, 3840x1280 source scaled to 3000x1000)
+  { url: '/template-green.png',    label: 'Green',     artist: 'Piktawr', holeX: 1981, holeY: 84, holeW: 1021, holeH: 724 },
+  { url: '/template-pink.png',     label: 'Pink',      artist: 'Piktawr', holeX: 1981, holeY: 84, holeW: 1021, holeH: 724 },
+  { url: '/template-purple.png',   label: 'Purple',    artist: 'Piktawr', holeX: 1981, holeY: 84, holeW: 1021, holeH: 724 },
+  { url: '/template-soft-pink.png',label: 'Soft Pink', artist: 'Piktawr', holeX: 1981, holeY: 84, holeW: 1021, holeH: 724 },
+  { url: '/template-gray.png',     label: 'Gray',      artist: 'Piktawr', holeX: 1981, holeY: 84, holeW: 1021, holeH: 724 },
+  // Asceno series (center phone screen hole, 3000x1000 native — scanned from transparency)
+  { url: '/ASCENOBANNERCOLLAB1.png', label: 'Asceno 1', artist: 'Asceno', holeX: 1160, holeY: 360, holeW: 772, holeH: 588 },
+  { url: '/ASCENOBANNERCOLLAB2.png', label: 'Asceno 2', artist: 'Asceno', holeX: 1160, holeY: 360, holeW: 772, holeH: 588 },
+  { url: '/ASCENOBANNERCOLLAB3.png', label: 'Asceno 3', artist: 'Asceno', holeX: 1160, holeY: 360, holeW: 772, holeH: 588 },
+  { url: '/ASCENOBANNERCOLLAB4.png', label: 'Asceno 4', artist: 'Asceno', holeX: 1160, holeY: 360, holeW: 772, holeH: 588 },
+];
+
 // ── State ──
 const state = {
-  currentStep: 0, // 0 = hero, 1-5 = steps
+  currentStep: 0,
   walletAddress: null,
   walletBalance: null,
   displayName: '',
+  selectedArtist: 'piktawr',
   croppedPhotoBlob: null,
   croppedPhotoUrl: null,
   bannerDataUrl: null,
@@ -49,20 +66,19 @@ document.addEventListener('DOMContentLoaded', () => {
 //  Event Bindings
 // ══════════════════════
 function bindEvents() {
-  // Hero
+  // ── Hero ──
   $('#btn-get-started').addEventListener('click', () => goToStep(1));
 
-  // Header connect / disconnect
+  // ── Header ──
   $('#btn-connect').addEventListener('click', connectWallet);
   $('#btn-disconnect').addEventListener('click', disconnectWallet);
 
-  // Step 1: Connect
+  // ── Step 1: Connect ──
   $('#btn-connect-step').addEventListener('click', connectWallet);
   $('#btn-step1-next').addEventListener('click', () => goToStep(2));
 
-  // Step 2: Name
-  const nameInput = $('#input-name');
-  nameInput.addEventListener('input', (e) => {
+  // ── Step 2: Name ──
+  $('#input-name').addEventListener('input', (e) => {
     state.displayName = e.target.value.trim();
     $('#name-counter').textContent = `${e.target.value.length} / 30`;
     $('#btn-step2-next').disabled = !state.displayName;
@@ -70,17 +86,41 @@ function bindEvents() {
   $('#btn-step2-back').addEventListener('click', () => goToStep(1));
   $('#btn-step2-next').addEventListener('click', () => goToStep(3));
 
-  // Step 3: Photo
-  const fileInput = $('#file-input');
-  const uploadArea = $('#upload-area');
+  // ── Step 3: Artist Selector ──
+  document.querySelectorAll('.artist-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.artist-card').forEach(c => c.classList.remove('artist-card--active'));
+      card.classList.add('artist-card--active');
 
-  uploadArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    uploadArea.classList.add('drag-over');
+      const artist = card.dataset.artist;
+      state.selectedArtist = artist;
+
+      // Set crop ratio based on artist's hole dimensions
+      const firstTpl = TEMPLATES.find(t => t.artist.toLowerCase() === artist);
+      if (firstTpl) {
+        CONFIG.templateUrl = firstTpl.url;
+        CONFIG.cropAspectRatio = firstTpl.holeW / firstTpl.holeH;
+        CONFIG.cropWidth = firstTpl.holeW;
+        CONFIG.cropHeight = firstTpl.holeH;
+      }
+
+      const guideText = artist === 'asceno'
+        ? 'Crop tightly into your <strong>eyes only</strong> — your photo will appear inside the <strong>Switch screen (center)</strong>.'
+        : 'Crop into your <strong>face/eyes</strong> — your photo will appear on the <strong>right side</strong> of the banner.';
+      $('#template-guide-text').innerHTML = guideText;
+      $('#crop-guide-text').innerHTML = guideText;
+
+      resetPhoto();
+    });
   });
-  uploadArea.addEventListener('dragleave', () => {
-    uploadArea.classList.remove('drag-over');
-  });
+  $('#btn-step3-back').addEventListener('click', () => goToStep(2));
+  $('#btn-step3-next').addEventListener('click', () => goToStep(4));
+
+  // ── Step 4: Crop ──
+  const uploadArea = $('#upload-area');
+  const fileInput = $('#file-input');
+  uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+  uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
   uploadArea.addEventListener('drop', (e) => {
     e.preventDefault();
     uploadArea.classList.remove('drag-over');
@@ -89,70 +129,40 @@ function bindEvents() {
   fileInput.addEventListener('change', (e) => {
     if (e.target.files[0]) handleFileSelect(e.target.files[0]);
   });
-
-  $('#btn-crop-rotate').addEventListener('click', () => {
-    if (state.cropper) state.cropper.rotate(90);
-  });
-  $('#btn-crop-reset').addEventListener('click', () => {
-    if (state.cropper) state.cropper.reset();
-  });
+  $('#btn-crop-rotate').addEventListener('click', () => { if (state.cropper) state.cropper.rotate(90); });
+  $('#btn-crop-reset').addEventListener('click', () => { if (state.cropper) state.cropper.reset(); });
   $('#btn-crop-confirm').addEventListener('click', confirmCrop);
   $('#btn-recrop').addEventListener('click', resetPhoto);
-  $('#btn-edit-crop').addEventListener('click', () => {
-    if (state.originalPhotoUrl) {
-      initCropper(state.originalPhotoUrl);
-    }
-  });
-
-  $('#btn-step3-back').addEventListener('click', () => goToStep(2));
-  $('#btn-step3-next').addEventListener('click', () => {
-    generateBanner();
-    goToStep(4);
-  });
-
-  // Step 4: Preview
-  document.querySelectorAll('.theme-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      // Remove active class from all
-      document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('theme-btn--active'));
-      // Add active class to clicked
-      e.target.classList.add('theme-btn--active');
-      // Update config and redraw
-      CONFIG.templateUrl = e.target.dataset.template;
-      generateBanner();
-    });
-  });
-
+  $('#btn-edit-crop').addEventListener('click', () => { if (state.originalPhotoUrl) initCropper(state.originalPhotoUrl); });
   $('#btn-step4-back').addEventListener('click', () => goToStep(3));
   $('#btn-step4-next').addEventListener('click', () => {
-    updateMintSummary();
+    generateBanner();
+    populateColorPicker();
     goToStep(5);
   });
 
-  // Step 5: Mint
-  $('#btn-mint').addEventListener('click', mintNFT);
-  
-  $('#btn-download-banner').addEventListener('click', () => {
-    const canvas = $('#banner-canvas');
-    const link = document.createElement('a');
-    link.download = `Ritual_Banner_${state.displayName || 'Anon'}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  });
-  
-  $('#btn-download-success').addEventListener('click', () => {
-    const canvas = $('#banner-canvas');
-    const link = document.createElement('a');
-    link.download = `Ritual_Banner_${state.displayName || 'Anon'}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  });
-
-  $('#btn-retry').addEventListener('click', () => {
-    showMintState('idle');
-  });
+  // ── Step 5: Preview + Color ──
   $('#btn-step5-back').addEventListener('click', () => goToStep(4));
+  $('#btn-step5-next').addEventListener('click', () => { updateMintSummary(); goToStep(6); });
+
+  // ── Step 6: Mint ──
+  $('#btn-mint').addEventListener('click', mintNFT);
+  $('#btn-download-banner').addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.download = `Ritual_Banner_${state.displayName || 'Anon'}.png`;
+    link.href = $('#banner-canvas').toDataURL('image/png');
+    link.click();
+  });
+  $('#btn-download-success').addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.download = `Ritual_Banner_${state.displayName || 'Anon'}.png`;
+    link.href = $('#banner-canvas').toDataURL('image/png');
+    link.click();
+  });
+  $('#btn-retry').addEventListener('click', () => showMintState('idle'));
+  $('#btn-step6-back').addEventListener('click', () => goToStep(5));
 }
+
 
 // ══════════════════════
 //  Navigation
@@ -179,14 +189,14 @@ function goToStep(step) {
     else if (s < step) el.classList.add('completed');
   });
 
-  // Show/hide step sections
-  for (let i = 1; i <= 5; i++) {
+  // Show/hide step sections (now 6 steps)
+  for (let i = 1; i <= 6; i++) {
     const section = $(`#step-${i}`);
+    if (!section) continue;
     if (i === step) {
       section.classList.remove('step-section--hidden');
       section.style.animation = 'none';
-      // Force reflow
-      section.offsetHeight;
+      section.offsetHeight; // force reflow
       section.style.animation = '';
     } else {
       section.classList.add('step-section--hidden');
@@ -455,7 +465,7 @@ function confirmCrop() {
     $('#cropped-image').src = state.croppedPhotoUrl;
     $('#cropper-container').classList.add('cropper-container--hidden');
     $('#cropped-preview').classList.remove('cropped-preview--hidden');
-    $('#btn-step3-next').disabled = false;
+    $('#btn-step4-next').disabled = false;
 
     // Clean up cropper
     state.cropper.destroy();
@@ -474,8 +484,45 @@ function resetPhoto() {
   $('#upload-area').classList.remove('upload-area--hidden');
   $('#cropper-container').classList.add('cropper-container--hidden');
   $('#cropped-preview').classList.add('cropped-preview--hidden');
-  $('#btn-step3-next').disabled = true;
+  $('#btn-step4-next').disabled = true;
   $('#file-input').value = '';
+}
+
+// ══════════════════════
+//  Color Picker (Step 5)
+// ══════════════════════
+function populateColorPicker() {
+  const container = $('#color-picker-options');
+  container.innerHTML = '';
+
+  const artist = state.selectedArtist || 'piktawr';
+  const variants = TEMPLATES.filter(t => t.artist.toLowerCase() === artist);
+
+  const colorMap = {
+    '/template-green.png':      '#00e68a',
+    '/template-pink.png':       '#ff3399',
+    '/template-purple.png':     '#9933ff',
+    '/template-soft-pink.png':  '#ff99cc',
+    '/template-gray.png':       '#808080',
+    '/ASCENOBANNERCOLLAB1.png': '#55aaff',  // Blue
+    '/ASCENOBANNERCOLLAB2.png': '#9933ff',  // Purple
+    '/ASCENOBANNERCOLLAB3.png': '#00cc55',  // Green
+    '/ASCENOBANNERCOLLAB4.png': '#ffcc00',  // Gold
+  };
+
+  variants.forEach(tpl => {
+    const btn = document.createElement('button');
+    btn.className = 'theme-btn' + (tpl.url === CONFIG.templateUrl ? ' theme-btn--active' : '');
+    btn.style.backgroundColor = colorMap[tpl.url] || '#888';
+    btn.title = tpl.label;
+    btn.addEventListener('click', () => {
+      container.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('theme-btn--active'));
+      btn.classList.add('theme-btn--active');
+      CONFIG.templateUrl = tpl.url;
+      generateBanner();
+    });
+    container.appendChild(btn);
+  });
 }
 
 // ══════════════════════
@@ -493,9 +540,12 @@ function generateBanner() {
   // Clear canvas
   ctx.clearRect(0, 0, W, H);
 
-  // Background color (in case template has transparency)
+  // Background color
   ctx.fillStyle = '#0a0a0a';
   ctx.fillRect(0, 0, W, H);
+
+  // Find active template config
+  const tpl = TEMPLATES.find(t => t.url === CONFIG.templateUrl) || TEMPLATES[0];
 
   const drawTemplate = () => {
     const templateImg = new Image();
@@ -508,16 +558,10 @@ function generateBanner() {
   if (state.croppedPhotoUrl) {
     const img = new Image();
     img.onload = () => {
-      // Coordinates precisely mapped to the transparency hole in the 3840x1280 template
-      // Scaled down to 3000x1000 canvas. (Included 2px bleed to prevent 1px edge gaps)
-      const photoX = 1981;
-      const photoY = 84;
-      const photoW = 1021;
-      const photoH = 724;
-      
-      ctx.drawImage(img, photoX, photoY, photoW, photoH);
-      
-      // Draw template ON TOP of the user photo so the splatters cover the edges
+      // Draw photo directly into the template hole (no center-fit needed — crop ratio matches hole)
+      ctx.drawImage(img, tpl.holeX, tpl.holeY, tpl.holeW, tpl.holeH);
+
+      // Draw template ON TOP so borders/splatters cover the edges
       drawTemplate();
     };
     img.src = state.croppedPhotoUrl;
@@ -600,6 +644,10 @@ function roundRect(ctx, x, y, w, h, r) {
 // ══════════════════════
 function updateMintSummary() {
   $('#mint-name').textContent = state.displayName;
+  const activeTpl = TEMPLATES.find(t => t.url === CONFIG.templateUrl);
+  if (activeTpl) {
+    $('#mint-template').textContent = `${activeTpl.label} by ${activeTpl.artist}`;
+  }
 }
 
 async function mintNFT() {
