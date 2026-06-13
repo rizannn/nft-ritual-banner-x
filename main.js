@@ -669,30 +669,28 @@ async function mintNFT() {
 
     $('#mint-status-text').textContent = 'Preparing image for IPFS...';
 
-    // Generate banner as a blob instead of data URL for Pinata
+    // Generate banner as a blob instead of data URL for NFT.Storage
     const canvas = $('#banner-canvas');
     const imageBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
     
     $('#mint-status-text').textContent = 'Uploading banner to IPFS...';
     
-    // Upload image to Pinata
-    const formData = new FormData();
-    formData.append('file', imageBlob, 'banner.png');
-    
-    const jwt = import.meta.env.VITE_PINATA_JWT;
-    if (!jwt) throw new Error('Pinata JWT not configured in environment variables');
+    // Upload image to NFT.Storage
+    const nftStorageKey = import.meta.env.VITE_NFT_STORAGE_KEY;
+    if (!nftStorageKey) throw new Error('NFT.Storage API key not configured in environment variables');
 
-    const imageRes = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
+    const imageRes = await fetch('https://api.nft.storage/upload', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${jwt}`
+        'Authorization': `Bearer ${nftStorageKey}`,
+        'Content-Type': 'image/png'
       },
-      body: formData
+      body: imageBlob
     });
     
     if (!imageRes.ok) throw new Error('Failed to upload image to IPFS');
     const imageData = await imageRes.json();
-    const imageIpfsUrl = `https://gateway.pinata.cloud/ipfs/${imageData.IpfsHash}`;
+    const imageIpfsUrl = `https://nftstorage.link/ipfs/${imageData.value.cid}`;
 
     $('#mint-status-text').textContent = 'Uploading metadata to IPFS...';
     
@@ -708,7 +706,7 @@ async function mintNFT() {
       console.warn("Failed to get total supply", e);
     }
     
-    // Upload metadata JSON to Pinata
+    // Upload metadata JSON to NFT.Storage
     const metadata = {
       name: `Ritual Banner #${nextId} - ${state.displayName} (❖,❖)`,
       description: `Ritualized Banner for @${state.displayName}`,
@@ -719,21 +717,18 @@ async function mintNFT() {
       ]
     };
 
-    const metadataRes = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
+    const metadataRes = await fetch('https://api.nft.storage/upload', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${jwt}`
+        'Authorization': `Bearer ${nftStorageKey}`,
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        pinataContent: metadata,
-        pinataMetadata: { name: `banner_metadata_${state.displayName}.json` }
-      })
+      body: JSON.stringify(metadata)
     });
-    
+
     if (!metadataRes.ok) throw new Error('Failed to upload metadata to IPFS');
     const metadataData = await metadataRes.json();
-    const metadataURI = `https://gateway.pinata.cloud/ipfs/${metadataData.IpfsHash}`;
+    const metadataURI = `https://nftstorage.link/ipfs/${metadataData.value.cid}`;
 
     $('#mint-status-text').textContent = 'Waiting for wallet approval...';
 
